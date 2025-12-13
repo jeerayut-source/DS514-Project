@@ -1,199 +1,206 @@
-# Retail Transaction Analysis & Price Prediction (Regression Project)
+🛍️ Retail Transaction Analysis & Membership Targeting
+Regression & Classification Project
 
-This project analyzes a retail transaction dataset and builds a Regression model to predict the purchase amount for each transaction. The analysis focuses on how product categories, discount usage, quantity, and payment methods influence transaction value, using only the actual features available in the dataset (no synthetic or invented data).
+This project analyzes a retail transaction dataset to understand transaction value drivers and to identify non-member customers (Negative class) for targeted promotional strategies.
 
----
+The analysis strictly uses only the available dataset features (no fabricated or synthetic data) and applies both Regression and Classification techniques to extract business-relevant insights.
 
-## 📌 1. Project Overview
+📌 1. Project Overview
 
-This project performs:
+This project consists of two main analytical components:
 
-- Data Cleaning  
-- Exploratory Data Analysis (EDA)  
-- Feature Engineering (lightweight, only from real columns)  
-- Regression modeling to predict transaction price  
-- Business interpretation of model outputs  
+1️⃣ Regression Analysis
 
-The objective is to understand **what factors drive transaction value** and **how each input variable affects customer spending behavior**.
+Predicts transaction price (purchase amount)
 
----
+Identifies factors that increase or decrease spending per transaction
 
-## 📌 2. Dataset Description
+2️⃣ Classification Analysis
 
-The dataset contains retail transactions with the following usable columns:
+Predicts membership status
 
-### **Available Features**
-- **Category** – Product category (e.g., Clothing, Shoes, Accessories)  
-- **Price** – Total amount of the transaction → *used as the target variable*  
-- **Quantity** – Number of items purchased in that transaction  
-- **Discount Flag** – Whether the transaction used a discount (Yes/No)  
-- **Payment Method** – Payment type used (e.g., Cash, Card, Wallet)
+Focuses on Not Member (Negative class) identification
 
-### **What the dataset does NOT include**
-- No customer ID  
-- No timestamps or dates  
-- No discount percentage  
-- No repeat customer behavior  
+Supports promotional targeting for customer acquisition campaigns
 
-All analysis and modeling respect these limitations without fabricating missing data.
+The project emphasizes interpretability and business usability over model complexity.
 
----
+📌 2. Dataset Description
 
-## 📌 3. Project Goal
+The dataset contains transaction-level retail data with the following columns:
 
-### 🎯 **Predict transaction price using Regression.**
+✅ Available Features
 
-By predicting the purchase amount, the project aims to answer:
+Category – Product category (Clothing, Footwear, Accessories, Outerwear)
 
-- Which factors increase or decrease transaction value?  
-- Does using a discount correspond to higher or lower spending?  
-- Which product categories are associated with high-value transactions?  
-- Do different payment methods correlate with different spending levels?  
+Price – Total transaction amount (used as regression target)
 
-Linear Regression was chosen due to:
-- Interpretability  
-- Simplicity  
-- Appropriateness for small-to-medium datasets  
-- Clear coefficient meaning for business insights  
+Quantity – Number of items purchased
 
----
+Discount Flag – Whether a discount was used (Yes / No)
 
-## 📌 4. Features & Target
+Payment Method – Cash, Credit Card, Wallet
 
-### 🎯 **Target Variable**
-- `Price` (continuous numeric value)
+Membership Status – Member (1) / Not Member (0)
 
-### 🧱 **Features Used**
-| Feature | Type | Reason |
-|--------|------|--------|
-| Category | Categorical (one-hot) | Strong determinant of price |
-| Quantity | Numeric | Influences total price directly |
-| Discount_Flag | Binary (0/1) | Indicates promotional behavior |
-| Payment_Method | Categorical (one-hot) | May correlate with customer purchasing power |
+❌ Dataset Limitations
 
-These features come **directly from the dataset** with no artificial fields.
+No customer ID
 
----
+No timestamps or purchase dates
 
-## 📌 5. Methodology
+No discount percentage
 
-### **1. Data Cleaning**
-- Handling missing values  
-- Converting categorical fields into machine-readable format  
-- Converting discount flag to binary (0 = No, 1 = Yes)
+No repeat-customer tracking
 
-### **2. Exploratory Data Analysis**
-- Price distribution  
-- Category vs. average price  
-- Effect of discount usage  
-- Relationship between payment methods and price  
+All modeling decisions respect these constraints.
 
-### **3. Feature Engineering**
-- One-hot encoding for categorical variables  
-- Minimal transformations to preserve original data integrity
+📌 3. Business Objective
+🎯 Primary Business Question
 
-### **4. Modeling**
-- Linear Regression (baseline model)  
-- Train/Test split  
-- Model evaluation using:
-  - MAE (Mean Absolute Error)  
-  - RMSE  
-  - R² Score  
-  - Residual plots
+How can we identify non-member customers and design promotions to convert them into members?
 
-### **5. Business Interpretation**
-- Coefficient analysis to identify variables with the strongest impact on price  
-- Comparison between discount vs. non-discount transactions  
-- Category-level price sensitivity insights  
+Supporting Questions
 
----
+Which transactions are most likely from non-members?
 
-## 📌 6. Key Insights from Analysis
+Do non-members behave differently in terms of price, quantity, or discount usage?
 
-- **Clothing** contributes the majority of total sales volume.  
-- **Accessories** show higher average prices compared to other categories.  
-- **Discount usage does not increase transaction value** — customers who do *not* use discounts often spend more.  
-- **Payment methods show minimal price differences**, suggesting channel neutrality.  
-- No strong seasonality was detected since the dataset contains no date information.  
+Can we reliably detect non-members to target promotions efficiently?
 
-These insights support pricing strategy optimization and discount policy evaluation.
+📌 Key Design Choice:
+This project intentionally focuses on the Negative class (Not Member = 0) because:
 
----
+Promotions are typically sent to non-members, not existing members
 
-## 📊 7. Model Performance — Logistic Regression
+Misclassifying a member as non-member is less costly than missing a true non-member
 
-A Logistic Regression classifier was trained to predict customer membership status  
-(Member = 1, Not Member = 0).  
-Below are the evaluation results obtained from the final model.
+📌 4. Features & Targets
+🎯 Regression Target
 
----
+Price (continuous numeric value)
 
-### ✔ Overall Accuracy
-- **Accuracy:** **83%**
+🎯 Classification Target
 
-This indicates that the model correctly predicts membership status for **83% of all transactions**.
+Membership Status
 
----
+0 = Not Member (Negative class of interest)
 
-## 📌 Classification Report
+1 = Member
 
-| Class | Precision | Recall | F1-score | Support |
-|-------|-----------|--------|----------|---------|
-| **0 – Not Member** | 1.00 | 0.76 | 0.86 | 558 |
-| **1 – Member**     | 0.62 | 0.99 | 0.76 | 222 |
+🧱 Features Used
+Feature	Type	Rationale
+Category	Categorical (One-hot)	Strong determinant of spending
+Quantity	Numeric	Direct impact on price
+Discount Flag	Binary (0/1)	Promotional behavior indicator
+Payment Method	Categorical (One-hot)	Possible spending pattern differences
 
-- **Macro Avg F1-score:** 0.81  
-- **Weighted Avg F1-score:** 0.83  
+No engineered or synthetic features were added.
 
----
+📌 5. Methodology
+🔹 Step 1: Data Cleaning
 
-### 🔍 Interpretation of Metrics
+Handled missing values
 
-**Class 0 – Not Member**  
-- Precision = **1.00** → Every time the model predicts “Not Member,” it is always correct.  
-- Recall = **0.76** → The model identifies 76% of actual non-members.
+Encoded categorical variables
 
-**Class 1 – Member**  
-- Precision = **0.62** → Some “Member” predictions are incorrect (false positives).  
-- Recall = **0.99** → Almost all real members are detected (very few false negatives).  
+Converted Discount Flag to binary
 
-📌 **Implication:**  
-- The model is **excellent at detecting actual Members** (high recall).  
-- But it occasionally predicts Member when the person is actually Not Member (lower precision).
+🔹 Step 2: Exploratory Data Analysis (EDA)
 
-This behavior is common when the model prioritizes finding positives (members) instead of avoiding false alarms.
+Price distribution analysis
 
----
+Category vs transaction value
 
-## 📌 Confusion Matrix Interpretation
+Discount vs non-discount spending comparison
 
-The confusion matrix below summarizes prediction performance:
+Payment method spending patterns
 
-| Actual ↓ / Predicted → | Not Member (0) | Member (1) |
-|------------------------|----------------|------------|
-| **Not Member (0)**     | 424            | 134        |
-| **Member (1)**         | 2              | 220        |
+🔹 Step 3: Regression Modeling
 
-### ✔ Key Insights
+Linear Regression
 
-- **424** Not Members correctly classified  
-- **220** Members correctly classified  
-- **134** Not Members misclassified as Members  
-- Only **2** actual Members were missed by the model (excellent)
+Train/Test split
 
-📌 The model shows **very low false negatives** for Members → useful if “missing a Member” is costly.
+Evaluation metrics:
 
----
+MAE
 
-## ⭐ Overall Performance Summary
+RMSE
 
-Logistic Regression achieved:  
-- Strong recall for Member detection  
-- Perfect precision for Not Member  
-- Balanced F1-scores across classes  
-- Solid overall accuracy (83%)  
+R² Score
 
-This makes it a reliable baseline model for membership prediction, especially in scenarios where detecting actual members is more important than avoiding occasional false-positive predictions.
+Residual diagnostics
 
+🔹 Step 4: Classification Modeling
 
----
+Logistic Regression
+
+Focus on interpretability and probability-based outputs
+
+Confusion Matrix & Classification Report analysis
+
+📌 6. Key Insights from EDA
+
+Clothing generates the highest transaction volume.
+
+Accessories show higher average transaction values.
+
+Non-discount transactions tend to have higher prices than discounted ones.
+
+Payment methods show minimal spending differences, indicating channel neutrality.
+
+Lack of timestamp data prevents seasonality analysis.
+
+📊 7. Classification Model Results
+Logistic Regression (Membership Prediction)
+✔ Overall Accuracy
+
+Accuracy: 83%
+
+The model correctly classifies membership status for 83% of transactions.
+
+📌 Classification Report
+Class	Precision	Recall	F1-score	Support
+0 – Not Member	1.00	0.76	0.86	558
+1 – Member	0.62	0.99	0.76	222
+
+Macro Avg F1-score: 0.81
+
+Weighted Avg F1-score: 0.83
+
+🔍 Interpretation (Negative Class Focus)
+🟥 Not Member (Class 0 — Business Priority)
+
+Precision = 1.00
+→ Every transaction predicted as Not Member is truly a non-member
+
+Recall = 0.76
+→ The model successfully identifies 76% of all non-members
+
+📌 Business Value:
+This makes the model highly reliable for promotion targeting, as marketing resources are not wasted on actual members.
+
+📌 Confusion Matrix Summary
+Actual ↓ / Predicted →	Not Member (0)	Member (1)
+Not Member (0)	424	134
+Member (1)	2	220
+Key Observations
+
+424 non-members correctly identified
+
+134 non-members misclassified as members
+
+Only 2 members incorrectly targeted as non-members
+
+📌 The model strongly minimizes false targeting of members, which aligns well with promotional use cases.
+
+⭐ Final Business Conclusion
+
+Logistic Regression provides interpretable and reliable results
+
+The model is well-suited for identifying non-members, the key target group for promotions
+
+High precision on the negative class ensures efficient marketing spend
+
+Regression insights complement classification by explaining spending behavior
